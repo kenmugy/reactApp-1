@@ -1,5 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  useParams,
+  useRouteMatch
+} from 'react-router-dom';
 
 const topics = [
   {
@@ -70,20 +76,23 @@ const topics = [
   }
 ];
 
-function Resource({ match }) {
+function Resource() {
+  let { topicID, resourceID } = useParams();
   const topic = topics
-    .find(topic => topic.id === match.params.topicID)
-    .resources.find(({ id }) => id === match.params.resourceID);
+    .find(topic => topic.id === topicID)
+    .resources.find(({ id }) => id === resourceID);
   return (
-    <div className="card-panel pink">
+    <div className='card-panel pink'>
       <h5>{topic.name}</h5>
       <p>{topic.description}</p>
     </div>
   );
 }
 
-function Topic({ match }) {
-  const topic = topics.find(topic => topic.id === match.params.topicID);
+function Topic() {
+  let { topicID } = useParams();
+  let match = useRouteMatch();
+  const topic = topics.find(topic => topic.id === topicID);
   return (
     <div className='card-panel orange lighten-2'>
       <h2>{topic.name}</h2>
@@ -103,13 +112,14 @@ function Topic({ match }) {
 function Home() {
   return <h1>Home</h1>;
 }
-function Topics({ match }) {
+function Topics() {
+  let match = useRouteMatch();
   return (
-    <div className="card-panel lighten-1">
+    <div className='card-panel lighten-1'>
       <h1>Topics</h1>
       <ul>
         {topics.map(({ name, id }) => (
-          <li key={id} >
+          <li key={id}>
             <Link to={`${match.url}/${id}`}>{name}</Link>
           </li>
         ))}
@@ -123,7 +133,7 @@ function App() {
   return (
     <Router>
       <div className='App card-panel green lighten-3'>
-        <ul className="center">
+        <ul className='center'>
           <li>
             <Link to='/'>Home</Link>
           </li>
